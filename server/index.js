@@ -1,9 +1,16 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import mongoose from 'mongoose'
+import cookieParser from 'cookie-parser'
+import { connectDB } from './config/connectDB.js'
 
-dotenv.config()
-
-const app = express()
+// CONFIGURATION
+dotenv.config();
+connectDB()   
+const app = express();
+app.use(express.json());
+app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
 
 const PORT = process.env.PORT_NUMBER || 5000
 
