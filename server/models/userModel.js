@@ -23,6 +23,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default: false,
+    },
+
+    verified: {
+        type: Boolean,
+        default: false,
+        required: true,
     }
 }, {timestamps: true})
 
