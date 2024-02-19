@@ -1,8 +1,17 @@
-import React from 'react'
+import { Outlet } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from './components/Navbar';
 
 export default function App() {
   return (
-    <div className="text-3xl font-bold underline">App</div>
+    <>
+      <ToastContainer />
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+    </>
   )
 }
 
