@@ -11,13 +11,13 @@ export default function Header() {
     const dispatch = useDispatch()
   return (
     <Navbar className='border-b-2 z-20 top-0 sticky'>
-        <Link to='/' className='hidden sm:flex text-center flex-col dark:text-white'>
-            <Button gradientDuoTone="purpleToBlue">RUSHDON</Button>
-            <span className='text-xs font-semibold text-teal-500'>POWERLIFTING</span>
+        <Link to='/' className='hidden sm:flex text-center flex-col'>
+            <Button gradientDuoTone="tealToLime">RUSHDON</Button>
+            <span className='text-xs font-semibold'>POWERLIFTING</span>
         </Link>
         <div className="flex flex-row gap-2">
             <Link to='sign-in'>
-                <Button gradientDuoTone='purpleToBlue' outline className='w-14 sm:w-full'>
+                <Button gradientDuoTone='tealToLime' outline className='w-14 sm:w-full'>
                     Login
                 </Button>
             </Link>
