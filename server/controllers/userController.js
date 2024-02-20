@@ -39,7 +39,6 @@ const createUser = async (req, res, next) => {
     try {
         await verificationToken.save()
         await newUser.save()
-        generateToken(res, newUser._id)
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -83,7 +82,7 @@ const loginUser = async (req, res, next) => {
         if (!validPassword) {
             return next(errorHandler(400, 'Invalid password'))
         }
-        generateToken(res, validUser._id)
+        const token = generateToken(res, validUser._id)
 
         const { password: pass, ...rest} = validUser._doc //seperates the password from the rest of the json data
 
@@ -158,4 +157,12 @@ const verifyEmail = async (req, res, next) => {
     }
 }
 
-export {createUser, loginUser, verifyEmail}
+const logoutUser = async (req, res, next) => {
+    try {
+        res.clearCookie('access_token').status(200).json('User has been signed out')
+    } catch (error) {
+        next(error)
+    }
+}
+
+export {createUser, loginUser, verifyEmail, logoutUser}
