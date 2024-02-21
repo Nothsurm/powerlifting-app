@@ -165,4 +165,13 @@ const logoutUser = async (req, res, next) => {
     }
 }
 
-export {createUser, loginUser, verifyEmail, logoutUser}
+const deleteUser = async (req, res, next) => {
+    try {
+        await User.findByIdAndDelete(req.body.id)
+        res.status(200).json('User has been deleted')
+    } catch (error) {
+        next(error)
+    }
+}
+
+export {createUser, loginUser, verifyEmail, logoutUser, deleteUser}
