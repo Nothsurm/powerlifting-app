@@ -52,7 +52,7 @@ const createUser = async (req, res, next) => {
             from: process.env.USERNAME_NODEMAILER,
             to: email,
             subject: 'Verify your email account',
-            text: `${newUser._id} ${OTP}`
+            text: `This is your 4 number verification code: ${OTP}`
           };
           
         transporter.sendMail(mailOptions, function(error, info){
@@ -95,7 +95,8 @@ const loginUser = async (req, res, next) => {
 }
 
 const verifyEmail = async (req, res, next) => {
-    const { userId, otp } = req.body
+    const { otp } = req.body
+    const userId = req.params.id
     if (!userId || !otp.trim()) {
         return next(errorHandler(404, 'Invalid request, missing parameters'))
     }
@@ -174,4 +175,52 @@ const deleteUser = async (req, res, next) => {
     }
 }
 
-export {createUser, loginUser, verifyEmail, logoutUser, deleteUser}
+const resendEmail = async (req, res, next) => {
+    const { email } = req.body
+    try {
+        const user = await User.findOne({email})
+        console.log(user);
+        if (!user) {
+            return next(errorHandler(400, 'User does not exist, please register first'))
+        }
+        if (user.verified) {
+            return next(errorHandler(400, 'User has already been verified'))
+        }
+
+        const OTP = generateOTP()
+        const verificationToken = new VerifyToken({
+        owner: user._id,
+        token: OTP
+    })
+
+        await verificationToken.save()
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.USERNAME_NODEMAILER,
+              pass: process.env.PASS_NODEMAILER,
+            }
+          });
+          
+        let mailOptions = {
+            from: process.env.USERNAME_NODEMAILER,
+            to: email,
+            subject: 'Verify your email account',
+            text: `This is your 4 number verification code: ${OTP}`
+          };
+          
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                return next(errorHandler(404, 'Error Sending Email'))
+            } else {
+                return res.json({ success: true, message: 'Email Sent'})
+            }
+        })
+        res.status(200).json('Email has been sent')
+    } catch (error) {
+        next(error)
+    }
+}
+
+export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail}

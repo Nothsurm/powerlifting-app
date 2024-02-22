@@ -1,10 +1,8 @@
 import { Label, TextInput, Button, Spinner } from "flowbite-react"
 import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FaStar } from "react-icons/fa";
 import { useRegisterMutation } from "../redux/api/userApiSlice";
-import { setCredentials } from "../redux/features/auth/authSlice";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -12,12 +10,11 @@ export default function Home() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
 
     const [register, {isLoading}] = useRegisterMutation()
 
-    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -28,8 +25,8 @@ export default function Home() {
         } else {
             try {
                 const res = await register({username, email, password}).unwrap()
-                dispatch(setCredentials({...res}))
                 toast.success('Please verify your email address')
+                navigate('/verify-email')
             } catch (error) {
                 console.log(error);
                 toast.error(error.data.message)
@@ -96,7 +93,7 @@ export default function Home() {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     </div>
-                    <Button gradientDuoTone='tealToLime' outline type='submit' disabled={loading}>
+                    <Button gradientDuoTone='tealToLime' outline type='submit' disabled={isLoading}>
                     {
                         isLoading ? (
                         <>

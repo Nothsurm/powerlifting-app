@@ -9,10 +9,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'POST',
                 body: data
             })
+        }),
+
+        resendEmail: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/resendEmail`,
+                method: 'POST',
+                body: data
+            })
         })
     })
 })
 
 export const {
-    useRegisterMutation
+    useRegisterMutation,
+    useResendEmailMutation
 } = userApiSlice
