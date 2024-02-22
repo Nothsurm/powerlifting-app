@@ -1,14 +1,26 @@
-import { TextInput, Button } from "flowbite-react"
+import { TextInput, Button, Spinner } from "flowbite-react"
 import { useState } from "react"
 import { useResendEmailMutation } from "../redux/api/userApiSlice.js"
 import { toast } from "react-toastify"
+import { useNavigate, useParams } from "react-router-dom"
 
 export default function VerifyEmail() {
+    const [formData, setFormData] = useState({})
     const [loading, setLoading] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const [email, setEmail] = useState('');
+    const {userId} = useParams()
+
+    const navigate = useNavigate()
 
     const [ResendEmail, {isLoading}] = useResendEmailMutation()
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value,
+        });
+    }
 
     const toggleDropdown = () => {
         setOpenModal(!openModal)
@@ -22,35 +34,48 @@ export default function VerifyEmail() {
             toast.error(error.data.message)
         }
     }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (!formData || formData.length < 4) {
+            toast.error('Your code is not valid')
+            return;
+        }
+        try {
+            const res = await fetch('/api/users/verify-email/'+userId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            const data = await res.json()
+            if (data.success === false) {
+                setLoading(false)
+                toast.error(data.message)
+                return;
+            } else {
+                setLoading(false)
+                toast.success('You have been successfully verified')
+                navigate('/sign-in')
+            }
+        } catch (error) {
+            setLoading(false);
+            toast.error(error.data.message)
+        }
+    }
   return (
     <div className='flex flex-col px-2 justify-center mt-28 max-w-lg mx-auto'>
-        <form className='flex flex-col'>
-            <h1 className="self-center">Please enter the 4 digit code sent to your email address:</h1>
-            <div className="flex flex-row justify-center gap-3 mt-4">
-                <div className="w-16">
-                    <TextInput 
-                        type='text'
-                        id='username'
-                    />
-                </div>
-                <div className="w-16">
-                    <TextInput 
-                        type='text'
-                        id='username'
-                    />
-                </div>
-                <div className="w-16">
-                    <TextInput 
-                        type='text'
-                        id='username'
-                    />
-                </div>
-                <div className="w-16">
-                    <TextInput 
-                        type='text'
-                        id='username'
-                    />
-                </div>
+        <form onSubmit={handleSubmit} className='flex flex-col'>
+        <h1 className="self-center">Please enter the 4 digit code sent to your email address:</h1>
+            <div className="flex flex-row justify-center mt-6">
+                <TextInput
+                    className="flex justify-center text-4xl bg-gray-800 w-32 p-2"
+                    type="text"
+                    onChange={handleChange}
+                    disabled={isLoading}
+                    id='otp'
+                />
             </div>
             <Button 
                 gradientDuoTone='pinkToOrange' 
@@ -97,12 +122,12 @@ export default function VerifyEmail() {
                     <Button 
                         gradientDuoTone='tealToLime' 
                         outline 
-                        disabled={loading} 
+                        disabled={isLoading} 
                         onClick={resendEmail}
                         className="mt-2 w-40 self-center"
                     >
                     {
-                        loading ? (
+                        isLoading ? (
                         <>
                             <Spinner size='sm'/>
                             <span className="pl-3">Loading...</span>

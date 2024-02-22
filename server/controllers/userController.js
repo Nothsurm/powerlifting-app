@@ -97,6 +97,9 @@ const loginUser = async (req, res, next) => {
 const verifyEmail = async (req, res, next) => {
     const { otp } = req.body
     const userId = req.params.id
+    if (!otp || otp.length < 4) {
+        return next(errorHandler(404, 'Your code is not valid'))
+    }
     if (!userId || !otp.trim()) {
         return next(errorHandler(404, 'Invalid request, missing parameters'))
     }

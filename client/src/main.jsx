@@ -19,7 +19,7 @@ const router = createBrowserRouter(
     <Route path='/' element={<App />}>
       <Route index={true} element={<Home />} />
       <Route path='/sign-in' element={<Login />} />
-      <Route path='/verify-email' element={<VerifyEmail />} />
+      <Route path='/verify-email/:userId' element={<VerifyEmail />} />
     </Route>
   )
 )
