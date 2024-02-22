@@ -25,12 +25,22 @@ export default function Home() {
                 <h3 className="mt-4 flex flex-row items-center gap-2"><FaStar />Smash those PR's!</h3>
                 <p className="mt-6 text-lg">This Powerlifting App will make your workouts easier to maintain</p>
                 <p className="mt-10 font-serif font-semibold">REGISTER NOW!</p>
+                <div className="flex flex-row items-center mt-6 gap-2">
+                    <div className="w-16 h-14">
+                    <img 
+                        src="https://images.unsplash.com/photo-1474176857210-7287d38d27c6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                        alt="profile image" 
+                        className="rounded-full w-full h-full object-cover border-2"
+                    />
+                    </div>
+                    <p className="font-serif font-semibold">"This App has everything I need, wish I found out about it sooner"<span className="text-slate-600 font-light">- Alex C.</span></p> 
+                </div>
             </div>
             {/* Right side of the page */}
             <div className="flex-1 mt-10 sm:mt-0">
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                     <div>
-                    <Label value='Your username' />
+                    <Label value='Your Username' />
                     <TextInput 
                         type='text'
                         placeholder="Username"
@@ -39,7 +49,7 @@ export default function Home() {
                     />
                     </div>
                     <div>
-                    <Label value='Your email' />
+                    <Label value='Your Email' />
                     <TextInput 
                         type='email'
                         placeholder="email@email.com"
@@ -48,11 +58,20 @@ export default function Home() {
                     />
                     </div>
                     <div>
-                    <Label value='Your password' />
+                    <Label value='Your Password' />
                     <TextInput 
                         type='password'
-                        placeholder="Password"
+                        placeholder="******"
                         id='password'
+                        onChange={handleChange}
+                    />
+                    </div>
+                    <div>
+                    <Label value='Confirm Password' />
+                    <TextInput 
+                        type='password'
+                        placeholder="******"
+                        id='confirmPassword'
                         onChange={handleChange}
                     />
                     </div>

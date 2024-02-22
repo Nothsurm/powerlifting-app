@@ -16,7 +16,7 @@ export default function Header() {
             <span className='text-xs font-semibold'>POWERLIFTING</span>
         </Link>
         <div className="flex flex-row gap-2">
-            <Link to='sign-in'>
+            <Link to='/sign-in'>
                 <Button gradientDuoTone='tealToLime' outline className='w-14 sm:w-full'>
                     Login
                 </Button>
@@ -29,7 +29,7 @@ export default function Header() {
             >
                 {theme === 'light' ? <FaMoon/> : <FaSun />}
             </Button>
-            <Link to='sign-up'>
+            <Link to='/'>
                 <Button gradientDuoTone='pinkToOrange' outline className='w-16 sm:w-full'>
                     Register
                 </Button>
