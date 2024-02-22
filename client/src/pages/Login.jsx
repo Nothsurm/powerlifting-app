@@ -52,7 +52,7 @@ export default function Login() {
                     <Spinner size='sm'/>
                     <span className="pl-3">Loading...</span>
                 </>
-                ) : 'Sign Up'
+                ) : 'Sign In'
             }
             </Button>
             <div className="flex flex-col gap-4 text-sm mt-2">

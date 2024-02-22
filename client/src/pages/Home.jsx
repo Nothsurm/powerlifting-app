@@ -1,19 +1,42 @@
-import { Label, TextInput, Button } from "flowbite-react"
+import { Label, TextInput, Button, Spinner } from "flowbite-react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { FaStar } from "react-icons/fa";
+import { useRegisterMutation } from "../redux/api/userApiSlice";
+import { setCredentials } from "../redux/features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 export default function Home() {
+    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [loading, setLoading] = useState(false)
     const [errorMessage, setErrorMessage] = useState(null)
 
+    const [register, {isLoading}] = useRegisterMutation()
+
+    const dispatch = useDispatch()
+
     const handleSubmit = async (e) => {
+        e.preventDefault()
 
+        if (password !== confirmPassword) {
+            toast.error('Passwords do not match')
+            return;
+        } else {
+            try {
+                const res = await register({username, email, password}).unwrap()
+                dispatch(setCredentials({...res}))
+                toast.success('Please verify your email address')
+            } catch (error) {
+                console.log(error);
+                toast.error(error.data.message)
+            }
+        }
     }
 
-    const handleChange = () => {
-
-    }
   return (
     <div>
         {/* Left side of the page */}
@@ -26,13 +49,11 @@ export default function Home() {
                 <p className="mt-6 text-lg">This Powerlifting App will make your workouts easier to maintain</p>
                 <p className="mt-10 font-serif font-semibold">REGISTER NOW!</p>
                 <div className="flex flex-row items-center mt-6 gap-2">
-                    <div className="w-16 h-14">
                     <img 
                         src="https://images.unsplash.com/photo-1474176857210-7287d38d27c6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                         alt="profile image" 
-                        className="rounded-full w-full h-full object-cover border-2"
+                        className="rounded-full w-16 h-16 object-cover border-2"
                     />
-                    </div>
                     <p className="font-serif font-semibold">"This App has everything I need, wish I found out about it sooner"<span className="text-slate-600 font-light">- Alex C.</span></p> 
                 </div>
             </div>
@@ -45,7 +66,7 @@ export default function Home() {
                         type='text'
                         placeholder="Username"
                         id='username'
-                        onChange={handleChange}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                     </div>
                     <div>
@@ -54,7 +75,7 @@ export default function Home() {
                         type='email'
                         placeholder="email@email.com"
                         id='email'
-                        onChange={handleChange}
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     </div>
                     <div>
@@ -63,7 +84,7 @@ export default function Home() {
                         type='password'
                         placeholder="******"
                         id='password'
-                        onChange={handleChange}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     </div>
                     <div>
@@ -72,12 +93,12 @@ export default function Home() {
                         type='password'
                         placeholder="******"
                         id='confirmPassword'
-                        onChange={handleChange}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                     </div>
                     <Button gradientDuoTone='tealToLime' outline type='submit' disabled={loading}>
                     {
-                        loading ? (
+                        isLoading ? (
                         <>
                             <Spinner size='sm'/>
                             <span className="pl-3">Loading...</span>
