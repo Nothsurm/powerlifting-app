@@ -1,39 +1,54 @@
-import { Label, TextInput, Button } from "flowbite-react"
-import { useState } from "react"
-import { Link } from "react-router-dom"
+import { Label, TextInput, Button, Spinner } from "flowbite-react"
+import { useEffect, useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { FaStar } from "react-icons/fa";
+import { setCredentials } from "../redux/features/auth/authSlice.js";
+import { useLoginMutation } from "../redux/api/userApiSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from 'react-toastify'
 
 export default function Login() {
-    const [loading, setLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState(null)
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
-    const handleChange = () => {
+    const [login, {isLoading}] = useLoginMutation()
 
-    }
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
 
-    const handleSubmit = async () => {
+    const { userInfo } = useSelector(state => state.auth)
 
+    useEffect(() => {
+        if (userInfo) {
+            toast.success('You are already signed in')
+            navigate('/dashboard')
+        }
+    })
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        try {
+            const res = await login({email, password}).unwrap()
+            dispatch(setCredentials({...res}))
+            toast.success('You have successfully signed in')
+            navigate('/dashboard')
+        } catch (error) {
+            console.log(error);
+            toast.error(error.data.message)
+        }
     }
   return (
-    <div className="flex justify-center max-w-xl mx-auto mt-28">
+    <div className="flex justify-center px-2 max-w-xl mx-auto mt-28">
         <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
         <h1 className="text-3xl self-center">LOGIN</h1>
-            <div className="w-full">
-                <Label value='Your username' />
-                <TextInput 
-                    type='text'
-                    placeholder="Username"
-                    id='username'
-                    onChange={handleChange}
-                />
-            </div>
             <div className="w-full">
                 <Label value='Your email' />
                 <TextInput 
                     type='email'
                     placeholder="email@email.com"
                     id='email'
-                    onChange={handleChange}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
             </div>
             <div className="w-full">
@@ -42,12 +57,12 @@ export default function Login() {
                     type='password'
                     placeholder="*******"
                     id='password'
-                    onChange={handleChange}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
             </div>
-            <Button gradientDuoTone='tealToLime' outline type='submit' disabled={loading}>
+            <Button gradientDuoTone='tealToLime' outline type='submit' disabled={isLoading}>
             {
-                loading ? (
+                isLoading ? (
                 <>
                     <Spinner size='sm'/>
                     <span className="pl-3">Loading...</span>

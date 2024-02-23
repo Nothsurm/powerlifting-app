@@ -19,18 +19,20 @@ export const userApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
-        verifyEmail: builder.mutation({
-            query: ({userId, data}) => ({
-                url: `${USERS_URL}/verify-email/${userId}`,
+        login: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/signin`,
                 method: 'POST',
                 body: data
             })
         }),
+
+        
     })
 })
 
 export const {
     useRegisterMutation,
     useResendEmailMutation,
-    useVerifyEmailMutation
+    useLoginMutation
 } = userApiSlice

@@ -210,7 +210,7 @@ const resendEmail = async (req, res, next) => {
             from: process.env.USERNAME_NODEMAILER,
             to: email,
             subject: 'Verify your email account',
-            text: `This is your 4 number verification code: ${OTP}`
+            text: `This is your 4 number verification code: ${OTP} \n\n Please click the link below and enter your code\n` + `http://localhost:5173/verify-email/${user._id}`
           };
           
         transporter.sendMail(mailOptions, function(error, info){

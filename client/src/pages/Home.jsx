@@ -24,7 +24,7 @@ export default function Home() {
             return;
         } else {
             try {
-                const res = await register({username, email, password}).unwrap()
+                await register({username, email, password}).unwrap()
                 toast.success('Please verify your email address')
                 navigate('/verify-email')
             } catch (error) {

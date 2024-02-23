@@ -13,6 +13,8 @@ import Home from './pages/Home.jsx'
 import ThemeProvider from './components/ThemeProvider.jsx'
 import Login from './pages/Login.jsx'
 import VerifyEmail from './pages/VerifyEmail.jsx'
+import PrivateRoute from './components/PrivateRoute.jsx'
+import Dashboard from './pages/PrivateRoute/Dashboard.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +22,11 @@ const router = createBrowserRouter(
       <Route index={true} element={<Home />} />
       <Route path='/sign-in' element={<Login />} />
       <Route path='/verify-email/:userId' element={<VerifyEmail />} />
+
+      {/* Signed In */}
+      <Route path='' element={<PrivateRoute />}>
+        <Route path='/dashboard' element={<Dashboard />} />
+      </Route>
     </Route>
   )
 )
