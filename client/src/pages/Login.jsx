@@ -20,7 +20,6 @@ export default function Login() {
 
     useEffect(() => {
         if (userInfo) {
-            toast.success('You are already signed in')
             navigate('/dashboard')
         }
     })

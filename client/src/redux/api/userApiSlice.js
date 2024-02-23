@@ -11,14 +11,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
-        resendEmail: builder.mutation({
-            query: (data) => ({
-                url: `${USERS_URL}/resendEmail`,
-                method: 'POST',
-                body: data
-            })
-        }),
-
         login: builder.mutation({
             query: (data) => ({
                 url: `${USERS_URL}/signin`,
@@ -27,12 +19,27 @@ export const userApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
-        
+        logout: builder.mutation({
+            query: () => ({
+                url: `${USERS_URL}/signout`,
+                method: 'POST',
+            })
+        }),
+
+        resendEmail: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/resendEmail`,
+                method: 'POST',
+                body: data
+            })
+        }),
+
     })
 })
 
 export const {
     useRegisterMutation,
     useResendEmailMutation,
-    useLoginMutation
+    useLoginMutation,
+    useLogoutMutation
 } = userApiSlice
