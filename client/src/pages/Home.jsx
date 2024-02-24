@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { FaStar } from "react-icons/fa";
 import { useRegisterMutation } from "../redux/api/userApiSlice";
 import { toast } from "react-toastify";
+import GoogleAuth from "../components/GoogleAuth";
 
 export default function Home() {
     const [username, setUsername] = useState('');
@@ -103,6 +104,7 @@ export default function Home() {
                         ) : 'Sign Up'
                     }
                     </Button>
+                    <GoogleAuth />
                 </form>
                 <div className="flex gap-2 text-sm mt-5">
                     <span>Have an account?</span>

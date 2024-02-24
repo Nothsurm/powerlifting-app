@@ -5,6 +5,7 @@ import { toggleTheme } from '../redux/theme/theme.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLogoutMutation } from '../redux/api/userApiSlice.js';
 import { logout } from '../redux/features/auth/authSlice.js';
+import { toast } from 'react-toastify'
 
 export default function Header() {
     const path = useLocation().pathname
@@ -20,7 +21,8 @@ export default function Header() {
         try {
             await logoutApiCall().unwrap()
             dispatch(logout())
-            navigate('/sign-in')
+            navigate('/signin')
+            toast.success('Successfully logged out')
         } catch (error) {
             toast.error(error)
         }

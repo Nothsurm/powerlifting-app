@@ -26,6 +26,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
+        google: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/google`,
+                method: 'POST',
+                body: data
+            })
+        }),
+
         resendEmail: builder.mutation({
             query: (data) => ({
                 url: `${USERS_URL}/resendEmail`,
@@ -33,7 +41,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body: data
             })
         }),
-
     })
 })
 
@@ -41,5 +48,6 @@ export const {
     useRegisterMutation,
     useResendEmailMutation,
     useLoginMutation,
-    useLogoutMutation
+    useLogoutMutation,
+    useGoogleMutation
 } = userApiSlice

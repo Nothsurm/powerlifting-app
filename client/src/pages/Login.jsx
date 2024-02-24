@@ -6,6 +6,7 @@ import { setCredentials } from "../redux/features/auth/authSlice.js";
 import { useLoginMutation } from "../redux/api/userApiSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from 'react-toastify'
+import GoogleAuth from "../components/GoogleAuth.jsx";
 
 export default function Login() {
     const [email, setEmail] = useState('')
@@ -69,6 +70,7 @@ export default function Login() {
                 ) : 'Sign In'
             }
             </Button>
+            <GoogleAuth />
             <div className="flex flex-col gap-4 text-sm mt-2">
                 <div className="flex flex-row gap-2">
                     <span>Don't have an account?</span>
