@@ -1,4 +1,4 @@
-import { Navbar, Button, Dropdown } from 'flowbite-react'
+import { Navbar, Button, Dropdown, Avatar } from 'flowbite-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FaMoon, FaSun } from 'react-icons/fa';
 import { toggleTheme } from '../redux/theme/theme.js';
@@ -11,6 +11,7 @@ export default function Header() {
     const path = useLocation().pathname
     const { theme } = useSelector((state) => state.theme)
     const { userInfo } = useSelector((state) => state.auth)
+    console.log(userInfo);
 
     const [logoutApiCall] = useLogoutMutation()
 
@@ -40,7 +41,12 @@ export default function Header() {
                     className='flex items-center'
                     arrowIcon={false}
                     inline
-                    label = {userInfo.username}
+                    label = {
+                        <Avatar 
+                            alt='user'
+                            img={userInfo.profilePicture}
+                        />
+                    }
                 >
                     <Dropdown.Header>
                         <span className='block text-sm'>@{userInfo.username}</span>

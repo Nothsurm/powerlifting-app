@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 export default function GoogleAuth() {
     const auth = getAuth(app)
 
-    const [google, {isLoading}] = useGoogleMutation()
+    const [google] = useGoogleMutation()
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
