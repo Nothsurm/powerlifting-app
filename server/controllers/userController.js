@@ -10,6 +10,10 @@ import { isValidObjectId } from "mongoose"
 const createUser = async (req, res, next) => {
     const { username, email, password } = req.body
 
+    const userExists = await User.findOne({email})
+    if (userExists) {
+        return next(errorHandler(400, 'This Email already exists'))
+    }
     if (!username || !email || !password) {
         return next(errorHandler(400, 'Please fill in all input fields'))
     }
@@ -89,6 +93,39 @@ const loginUser = async (req, res, next) => {
         res.status(200).cookie('access_token', token, {
             httpOnly: true
         }).json(rest)
+    } catch (error) {
+        next(error)
+    }
+}
+
+const google = async (req, res, next) => {
+    const {name, email, googlePhotoUrl} = req.body;
+
+    try {
+        const user = await User.findOne({email})
+        if (user) {
+            const token = generateToken(res, user._id)
+            const { password, ...rest} = user._doc
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
+        } else {
+            const generatedPassword = Math.random().toString(36).slice(-8)
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10)
+            const newUser = new User({
+                username: name.toLowerCase().split(' ').join('') + Math.random().toString(9).slice(-3),
+                email,
+                password: hashedPassword,
+                profilePicture: googlePhotoUrl,
+                verified: true
+            })
+            await newUser.save()
+            const token = generateToken(res, newUser._id)
+            const { password, ...rest} = newUser._doc
+            res.status(200).cookie('access_token', token, {
+                httpOnly: true
+            }).json(rest)
+        }
     } catch (error) {
         next(error)
     }
@@ -267,4 +304,4 @@ const resendEmail = async (req, res, next) => {
     }
 }
 
-export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser}
+export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google}

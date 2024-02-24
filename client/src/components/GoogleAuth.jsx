@@ -26,11 +26,9 @@ export default function GoogleAuth() {
                 email: resultsFromGoogle.user.email,
                 googlePhotoUrl: resultsFromGoogle.user.photoURL
             }).unwrap()
-            if (res.ok) {
-                dispatch(setCredentials({...res}))
-                toast.success('You have successfully registered and signed in')
-                navigate('/dashboard')
-            }
+            dispatch(setCredentials({...res}))
+            toast.success('You have successfully signed in')
+            navigate('/dashboard')
         } catch (error) {
             toast.error('Unable to sign in/register with your Google account')
             console.log(error);
