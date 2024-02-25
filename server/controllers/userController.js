@@ -63,7 +63,15 @@ const createUser = async (req, res, next) => {
             if (error) {
                 return next(errorHandler(404, 'Error Sending Email'))
             } else {
-                return res.json({ success: true, message: 'Email Sent'})
+                return res.json({ 
+                    success: true, 
+                    message: 'Email Sent',
+                    _id: newUser._id, 
+                    username: newUser.username, 
+                    email: newUser.email, 
+                    isAdmin: newUser.isAdmin,
+
+                })
             }
         })
     } catch (error) {
@@ -207,18 +215,20 @@ const logoutUser = async (req, res, next) => {
 }
 
 const deleteUser = async (req, res, next) => {
-    try {
-        await User.findByIdAndDelete(req.body.id)
-        res.status(200).json('User has been deleted')
-    } catch (error) {
-        next(error)
+    const user = await User.findById(req.params.userId)
+
+    if (user) {
+        try {
+            await User.deleteOne({_id: user._id})
+            res.clearCookie('access_token')
+            res.status(200).json('User has been deleted')
+        } catch (error) {
+            next(error)
+        }
     }
 }
 
 const updateUser = async (req, res, next) => {
-    /*if (req.user.id !== req.params.userId) {
-        return next(errorHandler(401, 'You are not allowed to update this User'))
-    }*/
     if (req.body.password) {
         if (req.body.password.length < 5) {
             return next(errorHandler(401, 'Password must be at least 5 characters'))
@@ -249,8 +259,8 @@ const updateUser = async (req, res, next) => {
                 password: req.body.password
             }
         }, {new: true})
-            const { password, ...rest } = updatedUser._doc
-            res.status(200).json(rest)
+        const { password, ...rest } = updatedUser._doc
+        res.status(200).json(rest)
     } catch (error) {
         next(error)
     }
