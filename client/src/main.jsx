@@ -15,6 +15,7 @@ import Login from './pages/Login.jsx'
 import VerifyEmail from './pages/VerifyEmail.jsx'
 import PrivateRoute from './components/PrivateRoute.jsx'
 import Dashboard from './pages/PrivateRoute/Dashboard.jsx'
+import ForgotPassword from './pages/ForgotPassword.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
       <Route index={true} element={<Home />} />
       <Route path='/signin' element={<Login />} />
       <Route path='/verify-email/:userId' element={<VerifyEmail />} />
+      <Route path='/forgotPassword' element={<ForgotPassword />} />
 
       {/* Signed In */}
       <Route path='' element={<PrivateRoute />}>

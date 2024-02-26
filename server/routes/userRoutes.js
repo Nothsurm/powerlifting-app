@@ -1,5 +1,5 @@
 import express from 'express'
-import { createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google } from '../controllers/userController.js'
+import { createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google, forgotPassword } from '../controllers/userController.js'
 import { verifyToken } from '../middleware/verifyUser.js'
 
 const router = express.Router()
@@ -12,5 +12,6 @@ router.delete('/deleteUser/:userId', verifyToken, deleteUser)
 router.post('/resendEmail', resendEmail)
 router.put('/update/:userId', verifyToken, updateUser)
 router.post('/google', google)
+router.post('/forgotPassword', forgotPassword)
 
 export default router

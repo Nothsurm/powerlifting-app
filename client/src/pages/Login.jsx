@@ -80,7 +80,7 @@ export default function Login() {
                 </div>
                 <div className="flex flex-row gap-2">
                     <span>Forgot your password?</span>
-                    <Link to='/' className="text-blue-500 hover:underline">
+                    <Link to='/forgotPassword' className="text-blue-500 hover:underline">
                         Click here
                     </Link>
                 </div>

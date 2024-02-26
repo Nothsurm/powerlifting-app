@@ -314,4 +314,42 @@ const resendEmail = async (req, res, next) => {
     }
 }
 
-export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google}
+const forgotPassword = async (req, res, next) => {
+    const {email} = req.body
+    try {
+        const user = await User.findOne({email})
+        if (!user) {
+            return next(errorHandler(404, 'This User does not exist'))
+        }
+        
+        const token = generateToken(res, user._id)
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.USERNAME_NODEMAILER,
+                pass: process.env.PASS_NODEMAILER
+            }
+            });
+              
+        let mailOptions = {
+            from: process.env.USERNAME_NODEMAILER,
+            to: email,
+            subject: 'Reset Password',
+            text: 'Please clink the link below to reset your password, this link will expire in 10 minutes ' + `https://localhost:5173/resetPassword/${token}`
+                
+            };
+              
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                return res.json({ message: 'error sending Email'})
+            } else {
+                return res.json({ success: true, message: 'Email Sent'})
+            }
+        });
+    } catch (error) {
+        next(error)
+    }
+}
+
+export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google, forgotPassword}
