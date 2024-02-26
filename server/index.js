@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser'
 import { connectDB } from './config/connectDB.js'
 
 import userRoutes from './routes/userRoutes.js'
+import workoutRoutes from './routes/workoutRoutes.js'
 
 // CONFIGURATION
 dotenv.config();
@@ -21,6 +22,7 @@ app.listen(PORT, () => {
 
 // ROUTES
 app.use('/api/users', userRoutes)
+app.use('/api/workouts', workoutRoutes)
 
 // LAYOUT OF ERROR
 app.use((err, req, res, next) => {
