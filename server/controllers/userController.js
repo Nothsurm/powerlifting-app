@@ -6,6 +6,7 @@ import { generateOTP } from "../utils/email.js"
 import VerifyToken from "../models/verifyTokenModel.js"
 import { generateToken } from "../utils/createToken.js"
 import { isValidObjectId } from "mongoose"
+import jwt from 'jsonwebtoken'
 
 const createUser = async (req, res, next) => {
     const { username, email, password } = req.body
@@ -322,7 +323,7 @@ const forgotPassword = async (req, res, next) => {
             return next(errorHandler(404, 'This User does not exist'))
         }
         
-        const token = generateToken(res, user._id)
+        const token = jwt.sign({id: user._id}, process.env.VITE_JWT_TOKEN, {expiresIn: '10m'});
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -336,7 +337,7 @@ const forgotPassword = async (req, res, next) => {
             from: process.env.USERNAME_NODEMAILER,
             to: email,
             subject: 'Reset Password',
-            text: 'Please clink the link below to reset your password, this link will expire in 10 minutes ' + `https://localhost:5173/resetPassword/${token}`
+            text: 'Please clink the link below to reset your password, this link will expire in 10 minutes ' + `http://localhost:5173/resetPassword/${token}`
                 
             };
               
@@ -352,4 +353,20 @@ const forgotPassword = async (req, res, next) => {
     }
 }
 
-export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google, forgotPassword}
+const resetPassword = async (req, res, next) => {
+    const {token} = req.params
+    const {password} = req.body
+    
+    try {
+        const decoded = jwt.verify(token, process.env.VITE_JWT_TOKEN)
+        const id = decoded.id;
+        const hashedPassword = await bcryptjs.hash(password, 10)
+        await User.findByIdAndUpdate({_id: id}, {password: hashedPassword})
+        return res.json({ status: true, message: "Updated Password Successfully"})
+
+    } catch (err) {
+        return next(errorHandler(404, 'You are not authorized to change this password'))
+    }
+}
+
+export {createUser, loginUser, verifyEmail, logoutUser, deleteUser, resendEmail, updateUser, google, forgotPassword, resetPassword}
