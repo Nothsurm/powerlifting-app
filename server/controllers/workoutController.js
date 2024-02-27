@@ -19,4 +19,20 @@ const newWorkout = async (req, res, next) => {
     }
 }
 
-export {newWorkout}
+const editWorkout = async (req, res, next) => {
+    try {
+        const updatedWorkout = await Workout.findByIdAndUpdate(req.params.postId, {
+            $set: {
+                title: req.body.title,
+                category: req.body.category,
+                image: req.body.image,
+                description: req.body.description
+            }
+        }, {new: true})
+        res.status(200).json(updatedWorkout)
+    } catch (error) {
+        next(error)
+    }
+}
+
+export {newWorkout, editWorkout}
