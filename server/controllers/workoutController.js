@@ -35,4 +35,17 @@ const editWorkout = async (req, res, next) => {
     }
 }
 
-export {newWorkout, editWorkout}
+const deleteWorkout = async (req, res, next) => {
+    const workout = await Workout.findById(req.params.postId)
+
+    if (workout) {
+        try {
+            await Workout.deleteOne({_id: workout._id})
+            res.status(200).json('Workout has been deleted')
+        } catch (error) {
+            next(error)
+        }
+    }
+}
+
+export {newWorkout, editWorkout, deleteWorkout}
